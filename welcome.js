@@ -33,14 +33,14 @@ module.exports = {
                 // Creating the Welcome Embed
                 const welcomeEmbed = new EmbedBuilder()
                     .setColor('#00FF00') // Green color for joins
-                    .setTitle('SET A TITTLE')
-                    .setDescription(`Welcome ${member}, YOUR DESCRIPTION`)
+                    .setTitle('👋 Welcome to the Server!')
+                    .setDescription(`Welcome ${member}, we are glad to have you here!\nHope you enjoy your stay.`)
                     .setThumbnail(member.user.displayAvatarURL({ dynamic: true })) // Shows user's avatar
                     .addFields(
                         { name: 'Total Members', value: `${member.guild.memberCount}`, inline: true }
                     )
                     // OPTIONAL IMAGE: Replace the placeholder below with your own direct image link
-                    .setImage('YOUR WELCOME IMAGE URL') 
+                    .setImage('YOUR_WELCOME_IMAGE_URL') 
                     .setTimestamp()
                     .setFooter({ text: `${member.guild.name}`, iconURL: member.guild.iconURL() });
 
@@ -71,8 +71,8 @@ module.exports = {
                 // Creating the Leave Embed
                 const leaveEmbed = new EmbedBuilder()
                     .setColor('#FF0000') // Red color for leaves
-                    .setTitle('SET TITTLE')
-                    .setDescription(`${member.user.tag} has leave the Server...`)
+                    .setTitle('👋 Goodbye!')
+                    .setDescription(`${member.user.tag} has left the server. We will miss you!`)
                     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
                     .addFields(
                         { name: 'Remaining Members', value: `${member.guild.memberCount}`, inline: true }
@@ -92,4 +92,3 @@ module.exports = {
 
     },
 };
-
