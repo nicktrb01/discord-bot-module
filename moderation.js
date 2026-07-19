@@ -1,19 +1,16 @@
 /**
  * MODERATION MODULE
  * 
- * Description: Advanced slash commands for server moderation (Kick, Ban, Mute/Timeout).
- * Features: Native Discord Timeouts and custom reasons.
- * 
- * Requirements: The bot needs "Kick Members" and "Ban Members" permissions on the server!
+ * Description: Advanced slash commands for server moderation (Kick, Ban, Mute).
+ * Requirement: The bot needs "Kick Members" and "Ban Members" permissions on the server!
  */
 
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('moderate')
         .setDescription('Advanced moderation commands for staff members')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers) // Only staff with mod permissions can see/use this
         
         // ==========================================
         // SUBCOMMAND: KICK
@@ -64,6 +61,21 @@ module.exports = {
                     option.setName('reason').setDescription('Reason for the mute').setRequired(false))),
 
     async execute(interaction) {
+        
+        // CONFIGURATION: Add the Role IDs that are allowed to use moderation commands here
+        // Example: ['112233445566778899', '998877665544332211']
+        const allowedRoleIds = ['YOUR_STAFF_ROLE_ID_1', 'YOUR_STAFF_ROLE_ID_2'];
+
+        // PERMISSION CHECK: Check if the executing user has at least one of the allowed roles
+        const hasPermission = interaction.member.roles.cache.some(role => allowedRoleIds.includes(role.id));
+        
+        if (!hasPermission) {
+            return interaction.reply({ 
+                content: '❌ [Permission Error]: You do not have the required staff role to use this command.', 
+                ephemeral: true 
+            });
+        }
+
         const subcommand = interaction.options.getSubcommand();
         const targetUser = interaction.options.getUser('target');
         const reason = interaction.options.getString('reason') || 'No reason provided by staff.';
@@ -108,7 +120,7 @@ module.exports = {
                 await targetMember.timeout(durationMs, reason);
                 
                 return interaction.reply({ 
-                    content: `🔇 **${targetUser.tag}** has been muted.\n**Duration:** ${interaction.options.get('duration').value} \n**Reason:** ${reason}`, 
+                    content: `🔇 **${targetUser.tag}** has been muted.\n**Reason:** ${reason}`, 
                     ephemeral: false 
                 });
             }
@@ -119,4 +131,3 @@ module.exports = {
         }
     },
 };
-
